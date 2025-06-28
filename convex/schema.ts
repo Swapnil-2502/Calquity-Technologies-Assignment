@@ -22,6 +22,7 @@ const applicationTables = {
     productDescription: v.optional(v.string()),
     status: v.string(), // "draft" | "generated" | "completed"
     selectedPosts: v.optional(v.array(v.number())),
+    layoutPresent: v.optional(v.string())
   }).index("by_user", ["userId"]),
 
   generatedPosts: defineTable({

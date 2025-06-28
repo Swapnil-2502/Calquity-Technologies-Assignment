@@ -25,6 +25,7 @@ export function CreateCampaign({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [productImage, setProductImage] = useState<File | null>(null);
   const [layoutImage, setLayoutImage] = useState<File | null>(null);
+  const [layoutPresent, setlayoutPresent] = useState("");
 
   const sections: Section[] = ["basics", "product", "layout", "review"];
   const currentIndex = sections.indexOf(currentSection);
@@ -104,6 +105,7 @@ export function CreateCampaign({
         productDescription: productDescription || undefined,
         productImageId,
         layoutImageId,
+        layoutPresent: layoutPresent || undefined
       });
 
       toast.success("Campaign created successfully!");
@@ -222,6 +224,22 @@ export function CreateCampaign({
   const renderLayoutSection = () => (
     <div className="space-y-6">
       <div className="space-y-2">
+          <label className="block text-sm font-medium">
+            Choose a Layout Preset
+          </label>
+          <select
+            value={layoutPresent}
+            onChange={(e) => setlayoutPresent(e.target.value)}
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            >
+            <option value="">Select a preset</option>
+            <option value="imageTopTextBottom">Image Top, Text Bottom</option>
+            <option value="sideBySide">Side by Side</option>
+            <option value="textOverlay">Text Overlaid on Image</option>
+            <option value="twoColumnGrid">Two Column Grid</option>
+          </select>
+      </div>
+      <div className="space-y-2">
         <label className="block text-sm font-medium">
           Layout Image
         </label>
@@ -280,6 +298,12 @@ export function CreateCampaign({
             <div>
               <dt className="text-sm text-gray-500">Product Description</dt>
               <dd className="mt-1">{productDescription}</dd>
+            </div>
+          )}
+          {layoutPresent && (
+             <div>
+              <dt className="text-sm text-gray-500">Layout Selected</dt>
+              <dd className="mt-1">{layoutPresent}</dd>
             </div>
           )}
           {instructions && (
