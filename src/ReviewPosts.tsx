@@ -1,8 +1,10 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { Id } from "../convex/_generated/dataModel";
 import { toast } from "sonner";
+import { JSX } from "react/jsx-runtime";
+import {PostLayout} from "./components/PostLayout"
 
 export function ReviewPosts({
   campaignId,
@@ -18,6 +20,46 @@ export function ReviewPosts({
   const [editPrompts, setEditPrompts] = useState<Record<number, string>>({});
   const [currentPage, setCurrentPage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const layout = campaign?.layoutPresent;
+
+  function LayoutPreview({layout} : {layout?: string}){
+      if (!layout) return null;
+
+      const layoutStyles: Record<string, JSX.Element> = {
+      imageTopTextBottom: (
+        <>
+          <span>🖼️</span>
+          <br />
+          <span>📝</span>
+        </>
+      ),
+      sideBySide: (
+        <>
+          <span>🖼️</span> <span>📝</span>
+        </>
+      ),
+      textOverlay: (
+        <>
+          <span>📝</span>/<span>🖼️</span>
+        </>
+      ),
+      twoColumnGrid: (
+        <>
+          <span>🖼️</span><span>📝</span>
+          <br />
+          <span>📝</span><span>🖼️</span>
+        </>
+      ),
+    };
+
+    return (
+      <div className="text-sm text-gray-500 text-center border-t pt-2 mt-4">
+        <strong>Layout Preview:</strong><br />
+        {layoutStyles[layout] || "N/A"}
+      </div>
+    );
+  }
 
   if (!campaign || !campaign.posts) {
     return (
@@ -110,7 +152,7 @@ export function ReviewPosts({
         </button>
 
         <div className="prose max-w-none mb-4 flex-grow mt-8">
-          <p className="text-gray-800">{post.text}</p>
+          <PostLayout text={post.text} layout={campaign.layoutPresent} />
         </div>
 
         <div className="flex gap-2">

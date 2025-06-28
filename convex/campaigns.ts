@@ -1,7 +1,7 @@
 import { v } from "convex/values";
-import { mutation, query, action } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
-import { api } from "./_generated/api";
+import { internal } from "./_generated/api";
 
 export const create = mutation({
   args: {
@@ -23,48 +23,14 @@ export const create = mutation({
       ...args,
     });
 
-    // Generate posts immediately instead of scheduling
-    const posts = Array.from({ length: 20 }, (_, i) => {
-      let layoutNote = "";
-
-      switch(args.layoutPresent){
-        case "imageTopTextBottom":
-          layoutNote = "Layout: Product image on top, text below.";
-          break;
-        case "sideBySide":
-          layoutNote = "Layout: Image on left, text on right.";
-          break;
-        case "textOverlay":
-          layoutNote =  "Layout: Text overlaid on image.";
-          break;
-        case "twoColumnGrid":
-          layoutNote= "Layout: Two-column grid with alternating image and text.";
-          break;
-        default:
-          layoutNote = "Layout: No specific layout preset.";
-      }
-       
-      
-      
-      
-      return {
-        text: `Generated Marketing Post ${i + 1}. ${layoutNote} Sample content demonstrating layout usage. #marketing #sample #demo`,
-        editPrompt: "",
-      }
-    });
-
-    // Save posts directly
-    await ctx.db.insert("generatedPosts", {
-      campaignId,
-      posts,
-    });
-
-    // Update status
-    await ctx.db.patch(campaignId, {
-      status: "generated",
-    });
-
     return campaignId;
+  },
+});
+
+export const markGenerated = mutation({
+  args: { campaignId: v.id("campaigns") },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.campaignId, { status: "generated" });
   },
 });
 

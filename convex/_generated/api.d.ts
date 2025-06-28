@@ -16,6 +16,8 @@ import type {
 import type * as auth from "../auth.js";
 import type * as campaigns from "../campaigns.js";
 import type * as companies from "../companies.js";
+import type * as gemini from "../gemini.js";
+import type * as generatePosts from "../generatePosts.js";
 import type * as http from "../http.js";
 import type * as router from "../router.js";
 
@@ -31,6 +33,8 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   campaigns: typeof campaigns;
   companies: typeof companies;
+  gemini: typeof gemini;
+  generatePosts: typeof generatePosts;
   http: typeof http;
   router: typeof router;
 }>;
